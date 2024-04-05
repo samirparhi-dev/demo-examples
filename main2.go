@@ -2,38 +2,21 @@ package main
 
 import (
     "fmt"
-    "database/sql"
-    _ "github.com/go-sql-driver/mysql"
+    "strings"
 )
 
 func main() {
     var userInput string
 
-    // Taking user input
-    fmt.Print("Enter your username: ")
-    fmt.Scanln(&userInput)
+	// Taking user input
+	fmt.Print("Enter your name: ")
+	fmt.Scanln(&userInput)
 
-    // Simulating SQL query
-    query := fmt.Sprintf("SELECT * FROM users WHERE username='%s'", userInput)
-
-    // Executing SQL query (This is vulnerable to SQL injection)
-    db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/database")
-    if err != nil {
- 	   panic(err.Error())
+    // Check for empty input
+    if strings.TrimSpace(userInput) == "" {
+        fmt.Println("Error: Input cannot be empty.")
+        return
     }
-    defer db.Close()
 
-    rows, err := db.Query(query)
-    if err != nil {
- 	   panic(err.Error())
-    }
-    defer rows.Close()
-
-    // Displaying results
-    for rows.Next() {
- 	   var id int
- 	   var username string
- 	   rows.Scan(&id, &username)
- 	   fmt.Printf("ID: %d, Username: %s\n", id, username)
-    }
+    fmt.Println("You entered:", userInput)
 }
